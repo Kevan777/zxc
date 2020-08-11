@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eyevision.kf.service.mapper.GoodsPictureMapper">
+    <resultMap id="BaseResultMap" type="com.eyevision.kf.service.entity.GoodsPicture">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+        <result column="last_updater" jdbcType="VARCHAR" property="lastUpdater"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+    </resultMap>
+
+    <insert id="insertList" parameterType="com.eyevision.kf.service.entity.GoodsPicture">
+        insert into kf_goods_picture(id,create_time,creator,last_update_time,last_updater,goods_id,url) values
+        <foreach collection="list" item="item" separator=",">
+            #{item.id},#{ietm.create_time},#{item.creator},#{ietm.last_update_time},#{item.last_updater},#{ietm.url}
+        </foreach>
+    </insert>
+</mapper>

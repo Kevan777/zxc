@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eyevision.kf.service.mapper.CouponMapper">
+    <resultMap id="BaseResultMap" type="com.eyevision.kf.service.entity.Coupon">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+        <result column="last_updater" jdbcType="VARCHAR" property="lastUpdater"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="valid_order_money" jdbcType="DECIMAL" property="validOrderMoney"/>
+        <result column="reduce_money" jdbcType="DECIMAL" property="reduceMoney"/>
+        <result column="limit_use" jdbcType="BIT" property="limitUse"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="acquire_start_date" jdbcType="DATE" property="acquireStartDate"/>
+        <result column="acquire_end_date" jdbcType="DATE" property="acquireEndDate"/>
+        <result column="valid_rule" jdbcType="INTEGER" property="validRule"/>
+        <result column="valid_day" jdbcType="INTEGER" property="validDay"/>
+        <result column="valid_start_date" jdbcType="DATE" property="validStartDate"/>
+        <result column="valid_end_date" jdbcType="DATE" property="validEndDate"/>
+        <result column="limit_member_acquire" jdbcType="BIT" property="limitMemberAcquire"/>
+        <result column="can_acquire_num" jdbcType="INTEGER" property="canAcquireNum"/>
+        <result column="has_acquire_num" jdbcType="INTEGER" property="hasAcquireNum"/>
+        <result column="can_use_order_type" jdbcType="INTEGER" property="canUseOrderType"/>
+        <result column="has_acquire" jdbcType="BIT" property="hasAcquire"/>
+    </resultMap>
+
+    <select id="test" resultMap="BaseResultMap">
+        select * from kf_coupon
+        <where>
+            <if test="canUseOrderTypeArr != null">
+            and
+            <foreach collection="canUseOrderTypeArr" item="temp" open="(" close=")" separator="or">
+                can_use_order_type &amp; #{temp} = #{temp}
+            </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByForm" resultMap="BaseResultMap" parameterType="com.eyevision.kf.service.form.CouponForm">
+        select * from yunjk_coupon
+        <include refid="whereByForm"/>
+    </select>
+
+    <select id="selectCountByForm" resultType="long" parameterType="com.eyevision.kf.service.form.CouponForm">
+        select count(id) from yunjk_coupon
+        <include refid="whereByForm"/>
+    </select>
+
+    <select id="selectByUserCanAcquire" resultMap="BaseResultMap"
+            parameterType="com.eyevision.kf.service.form.CouponForm">
+        select *, (select count(id) > 0 from yunjk_user_coupon where user_id = #{userId} and coupon_id = t.id) as has_acquire
+        from yunjk_coupon t where acquire_start_date &lt;= curdate() and acquire_end_date >= curdate()
+        and status = #{status}
+        and can_acquire_num > has_acquire_num
+        <if test="goodsId != null">
+            and (!limit_use or (limit_use and (id in (select coupon_id from kf_coupon_goods where goods_id = #{goodsId}))))
+        </if>
+        <if test="member != null and !member">
+            and limit_member_acquire = false
+        </if>
+        <if test="canUseOrderTypeArr != null">
+            and
+            <foreach collection="canUseOrderTypeArr" item="temp" open="(" close=")" separator="or">
+                can_use_order_type &amp; #{temp} = #{temp}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectByCanUse" resultMap="BaseResultMap">
+        select * from kf_coupon where id = #{id} and can_use_order_type &amp; #{canUseOrderType} = #{canUseOrderType} and status = 2
+        and (!limit_use or (limit_use and (id in (select coupon_id from kf_coupon_goods where goods_id = #{goodsId}))))
+    </select>
+
+    <sql id="whereByForm">
+        <where>
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="canUseOrderTypeArr != null">
+                and
+                <foreach collection="canUseOrderTypeArr" item="temp" open="(" close=")" separator="or">
+                    can_use_order_type &amp; #{temp} = #{temp}
+                </foreach>
+            </if>
+            <if test="userId != null">
+                and id in (
+                select coupon_id from yunjk_kf_coupon where user_id = #{userId}
+                <if test="userCanUsed != null and userCanUsed">
+                    and start_date &lt;= curdate() and end_date >= curdate() and status = 1
+                </if>
+                )
+            </if>
+            <if test="goodsId != null">
+                and (!limit_use or (limit_use and (id in (select coupon_id from kf_coupon_goods where goods_id = #{goodsId}))))
+            </if>
+        </where>
+    </sql>
+</mapper>

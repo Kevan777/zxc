@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?serverTimezone=UTC
+    password: root
+    username: root
+    initialSize: 0
+    maxActive: 8
+    maxWait: 60000
+  flyway:
+    enabled: false
+
+mapper:
+  mappers:  tk.mybatis.mapper.common.Mapper, com.eyevision.framework.spring.mybatis.BasicMapper
+  not-empty: false
+  identity: MYSQL
+  UUID: "@com.eyevision.framework.spring.mybatis.IdGenerateUtil@generate()"
+  enableMethodAnnotation: true
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+swagger:
+  enabled: true
+
+mybatis:
+  mapper-locations: classpath*:com/eyevision/kf/service/mapper/*.xml
+  type-aliases-package: com.eyevision.kf.server.entity
+
+logging:
+  level:
+    com.kfexample.server.mapper: debug
+
+ufile:
+  publicKey: ${ufile.publicKey}
+  privateKey: ${ufile.privateKey}
+  proxySuffix: .cn-gd.ufileos.com
+  cdnProxySuffix: ${ufile.cdnProxySuffix}
+  publicBucket: ${ufile.publicBucket}
+  privateBucket: ${ufile.privateBucket}
+  privateTtl: 60

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eyevision.kf.service.mapper.SeckillingActivityGoodsMapper">
+    <resultMap id="BaseResultMap" type="com.eyevision.kf.service.entity.SeckillingActivityGoods">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime" />
+        <result column="last_updater" jdbcType="VARCHAR" property="lastUpdater" />
+        <result column="seckilling_activity_id" jdbcType="BIGINT" property="seckillingActivityId" />
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId" />
+        <result column="sort_num" jdbcType="INTEGER" property="sortNum" />
+    </resultMap>
+
+    <resultMap id="MinPriceMap" type="com.eyevision.framework.common.model.SimpleData">
+        <result column="goods_id" jdbcType="BIGINT" property="key" />
+        <result column="min_price" jdbcType="DECIMAL" property="value" />
+    </resultMap>
+
+    <select id="selectByActivityAndGoods" resultMap="BaseResultMap">
+        select
+        *
+        from
+        kf_seckilling_activity_goods_norm
+        where
+        seckilling_activity_goods_id in (
+        select
+        id
+        from
+        kf_seckilling_activity_goods
+        where
+        seckilling_activity_id = #{activityId}
+        <if test="goodsId != null">
+            and goods_id = #{goodsId}
+        </if>
+        )
+    </select>
+</mapper>

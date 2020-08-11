@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eyevision.kf.service.mapper.GoodsNormMapper">
+    <resultMap id="BaseResultMap" type="com.eyevision.kf.service.entity.GoodsNorm">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+        <result column="last_updater" jdbcType="VARCHAR" property="lastUpdater"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="market_price" jdbcType="DECIMAL" property="marketPrice"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="group_buying_price" jdbcType="DECIMAL" property="groupBuyingPrice"/>
+        <result column="deposit" jdbcType="INTEGER" property="deposit"/>
+        <result column="rent_day" jdbcType="DECIMAL" property="rentDay"/>
+        <result column="overdue_day_fee" jdbcType="DECIMAL" property="overdueDayFee"/>
+        <result column="number" jdbcType="INTEGER" property="number"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+</mapper>
